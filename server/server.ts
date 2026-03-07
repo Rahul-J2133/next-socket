@@ -41,4 +41,3 @@ wss.on("connection", (ws: WebSocket) => {
 
 console.log("✅ WebSocket server running on ws://localhost:3001");
 
-// npx tsx .\next-socket\server\websocket-server.ts

@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# next-socket
+
+A real-time **collaborative typing** app built with Next.js 15 and a standalone WebSocket server. Any text typed in the textarea is instantly broadcast to all connected clients — open it in multiple browser tabs or devices on the same network to see live synchronization.
+
+---
+
+## How It Works
+
+- The **Next.js frontend** (`/collaborative-typing`) connects to a WebSocket server on port `3001`.
+- On each keystroke, the client sends a `TEXT_UPDATE` message to the server.
+- The **WebSocket server** broadcasts every received message to all connected clients.
+- All clients update their textarea in real time.
+
+---
+
+## Project Structure
+
+```
+next-socket/
+├── src/
+│   └── app/
+│       ├── page.tsx                     # Redirects to /collaborative-typing
+│       └── collaborative-typing/
+│           └── page.tsx                 # Main collaborative typing UI
+├── server/
+│   ├── server.ts                        # Standalone WebSocket server (port 3001)
+│   ├── package.json
+│   └── tsconfig.json
+├── next.config.ts                       # Next.js config (allowed dev origins)
+└── package.json
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### 1. Install frontend dependencies
+
+```bash
+npm install
+```
+
+### 2. Install server dependencies
+
+```bash
+cd server
+npm install
+cd ..
+```
+
+### 3. Start the WebSocket server
+
+```bash
+cd server
+npm run dev
+```
+
+The WebSocket server will start on `ws://localhost:3001`.
+
+### 4. Start the Next.js frontend
+
+In a separate terminal, from the project root:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at [http://localhost:3000](http://localhost:3000), which redirects to `/collaborative-typing`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Using on a Local Network (Multiple Devices)
 
-## Learn More
+To test across devices on the same Wi-Fi network:
 
-To learn more about Next.js, take a look at the following resources:
+1. Start Next.js with network access enabled:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run dev -- --hostname 0.0.0.0
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Update `next.config.ts` to include your machine's local IP in `allowedDevOrigins`:
 
-## Deploy on Vercel
+```ts
+experimental: {
+  allowedDevOrigins: ['http://192.168.x.x:3000'],
+},
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Open `http://<your-local-ip>:3000` on any device on the same network.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Tech Stack
+
+| Layer     | Technology              |
+|-----------|-------------------------|
+| Frontend  | Next.js 15, React 19    |
+| Styling   | Tailwind CSS v4         |
+| WebSocket | `ws` v8 (Node.js)       |
+| Language  | TypeScript              |
+
+---
+
+## Scripts
+
+### Frontend (`/`)
+
+| Command         | Description              |
+|-----------------|--------------------------|
+| `npm run dev`   | Start Next.js dev server |
+| `npm run build` | Build for production     |
+| `npm run start` | Start production server  |
+| `npm run lint`  | Run ESLint               |
+
+### WebSocket Server (`/server`)
+
+| Command         | Description                        |
+|-----------------|------------------------------------|
+| `npm run dev`   | Run server with `ts-node`          |
+| `npm run build` | Compile TypeScript to `dist/`      |
+| `npm run start` | Run compiled server from `dist/`   |
