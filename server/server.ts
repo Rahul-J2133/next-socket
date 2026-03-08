@@ -1,7 +1,7 @@
 import { WebSocketServer, WebSocket } from "ws";
 
 // Create server
-const wss = new WebSocketServer({ port: 3001 });
+const wss = new WebSocketServer({host: "0.0.0.0", port: 3001});
 
 // Track all connected clients
 const clients = new Set<WebSocket>();

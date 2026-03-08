@@ -96,6 +96,8 @@ experimental: {
 
 ---
 
+<img src="next-socket-demo.gif" style="width:100%; max-width:900px; height:auto;">
+
 ## Tech Stack
 
 | Layer     | Technology              |
